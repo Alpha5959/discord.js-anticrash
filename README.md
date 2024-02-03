@@ -36,15 +36,16 @@ npm install discord.js-anticrash
 To implement `discord.js-anticrash`, import the package and invoke the `errorHandling` function, providing your Discord.js client and configuration options:
 
 ```javascript
-const { Client, Collection, Events, GatewayIntentBits } = require("discord.js"); // Discord.js
-const errorHandling = require("discord.js-anticrash"); // Package
+const { Client, GatewayIntentBits, Events } = require("discord.js");
+const errorHandling = require("discord.js-anticrash");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const config = {
-  webhookUrl: "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN", // REQUIRED
+  webhookUrl: "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN",
   embedColor: "#ff0000", // Optional
   embedTitle: "Error", // Optional
+  embedAvatarUrl: "https://cdn.discordapp.com/avatars/example", // Optional
   webhookUsername: "Error", // Optional
 };
 
@@ -60,6 +61,8 @@ Customize the behavior of `discord.js-anticrash` with the `config` object:
 - **webhookUrl (required)**: The URL of the Discord webhook to send error messages.
 - **embedColor (optional)**: The color of the embed message (default: `#ff0000`).
 - **embedTitle (optional)**: The title of the embed message (default: `Error`).
+- **embedTitle (optional)**: The title of the embed message (default: `Error`).
+- **embedAvatarUrl (optional)**: The title of the embed message (default: `None`).
 - **webhookUsername (optional)**: The username for the webhook (default: `Error`).
 
 ## Error Handling 🚨
@@ -77,7 +80,7 @@ Customize the behavior of `discord.js-anticrash` with the `config` object:
 Witness `discord.js-anticrash` in action, handling errors and uncaught exceptions:
 
 ```javascript
-const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
+const { Client, GatewayIntentBits, Events } = require("discord.js");
 const errorHandling = require("discord.js-anticrash");
 
 const client = new Client({
