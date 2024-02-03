@@ -1,0 +1,28 @@
+{
+  "name": "discord.js-anticrash",
+  "version": "1.0.0",
+  "description": "Advanced anticrash, customizable, and error-handling enhancements for Discord bots using discord.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alpha5959/discord.js-anticrash.git"
+  },
+  "keywords": [
+    "anticrash",
+    "discord.js-anticrash",
+    "discord-anticrash",
+    "discord.js"
+  ],
+  "author": "xkroenen",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Alpha5959/discord.js-anticrash/issues"
+  },
+  "homepage": "https://github.com/Alpha5959/discord.js-anticrash#readme",
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  }
+}
