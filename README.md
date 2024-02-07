@@ -1,4 +1,4 @@
-# `discord.js-anticrash`: ⚡ Advanced Error Handling for Discord.js
+# `discord.js-anticrash`: ⚡ Powerful Error Handling for Discord.js
 
 <p align="center">
   <a href="https://www.npmjs.com/package/discord.js-anticrash">
@@ -15,13 +15,17 @@
   </a>
 </p>
 
-**Presenting `discord.js-anticrash`**, a robust error-handling package tailored for Discord.js. Empower your bot with seamless handling of errors, uncaught exceptions, unhandled rejections, and more. With `discord.js-anticrash`, configuring your bot to dispatch detailed error messages to a Discord webhook becomes a breeze, ensuring you stay informed when the unexpected happens.
+**Presenting `discord.js-anticrash`**, a powerful npm package 📦 tailored to enhance error handling ⚠️ and logging capabilities 📝 in your Discord.js bots. Seamlessly integrate this package to fortify your bot's stability and streamline the troubleshooting process.
 
 ## Features 🚀
 
-- **🔒 Secure**: Guard your bot against unexpected crashes with proactive error identification and handling.
-- **🔔 Notifications**: Receive instant notifications via Discord webhook when errors occur.
-- **🛠 Customizable**: Tailor the package to your needs – customize webhook URL, embed color, title, and username.
+- **🔒 Secure**: Safeguard your bot from unexpected crashes with proactive error identification and handling.
+- **🔔 Notifications**: Receive instant notifications through Discord webhooks whenever errors occur.
+- **🛠 Customizable**: Tailor the package to fit your needs by customizing webhook URLs, embed colors, titles, and usernames.
+- **🖥 Console Logging**: Enjoy the best-in-class console error logging feature for easy debugging.
+- **🚨 Error Detection**: Detects all errors and notifies the developer for comprehensive error tracking.
+- **💪 Strong Error Handling**: Employs a robust inbuilt error handling mechanism for enhanced bot stability.
+- **🔄 Regular Updates**: Benefit from daily updates to ensure compatibility and incorporate the latest features and improvements.
 
 ## Installation 📦
 
@@ -67,7 +71,7 @@ Customize the behavior of `discord.js-anticrash` with the `config` object:
 
 ## Error Handling 🚨
 
-`discord.js-anticrash` delivers advanced error handling for Discord.js v14:
+`discord.js-anticrash` delivers advanced error handling for Discord.js:
 
 - **unhandledRejection**: Handles unhandled rejections, sending detailed error messages to the Discord webhook.
 - **uncaughtException**: Manages uncaught exceptions, dispatching detailed error messages to the Discord webhook.
