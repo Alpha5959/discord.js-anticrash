@@ -1,21 +1,12 @@
 const { WebhookClient, EmbedBuilder } = require("discord.js");
-
-/**
- * Initialize error handling for a Discord.js client.
- * @param {Client} client - The Discord.js client instance.
- * @param {Object} config - Configuration options for error handling.
- * @param {string} config.webhookUrl - The URL of the Discord webhook to send error messages.
- * @param {string} [config.embedColor] - The color of the embed message (default: "ff0000").
- * @param {string} [config.embedTitle] - The title of the embed message (default: "Error").
- * @param {string} [config.webhookUsername] - The username for the webhook (default: "Error").
- * @param {string} [config.embedAvatarUrl] - The avatar URL for the embed message (default: empty string).
- */
+const colors = require("colors");
 
 module.exports = async function errorHandling(client, config) {
   process.removeAllListeners();
 
   const webhookUrl = config.webhookUrl;
   if (!webhookUrl) {
+    logError(new Error("Webhook URL is required."));
     throw new Error("Webhook URL is required.");
   }
 
@@ -39,30 +30,32 @@ module.exports = async function errorHandling(client, config) {
         embeds: [
           new EmbedBuilder()
             .setColor(embedConfig.embedColor)
+            .setTimestamp()
             .setTitle(`${eventType.toUpperCase()} - ${embedConfig.embedTitle}`)
-            .setAuthor({ name: `❎ An Error Occured` })
-            .addFields(
+            .setAuthor({ name: "Discord.js ‣ Anticrash" })
+            .setFooter({ text: "Powered by discord.js-anticrash" })
+            .addFields([
               {
                 name: "__Event Type__",
-                value: `\`${eventType}\``,
+                value: `\`${eventType || "No types provided."}\``,
                 inline: true,
               },
               {
                 name: "__Message__",
-                value: `**\`${additionalInfo}\`**`,
+                value: `**\`${
+                  additionalInfo || "No Additional Info Provided"
+                }\`**`,
                 inline: true,
               },
               {
                 name: "__Detailed__",
-                value: `\`\`\`${errorMessage}\`\`\``,
-              }
-            ),
+                value: `\`\`\`${errorMessage || "Nothing found here."}\`\`\``,
+              },
+            ]),
         ],
       });
-
-      console.error(`[${eventType}]`, error, additionalInfo);
     } catch (error) {
-      console.error("Error sending error message:", error);
+      console.error(colors.bgRed("Error sending error message:"), error);
     }
   };
 
@@ -74,33 +67,41 @@ module.exports = async function errorHandling(client, config) {
     },
     uncaughtException: {
       level: "error",
-      listener: (error, origin) =>
-        sendErrorMessage(error, "Uncaught Exception", `Origin: ${origin}`),
+      listener: (error, origin) => {
+        logError(error);
+        sendErrorMessage(error, "Uncaught Exception", `Origin: ${origin}`);
+      },
     },
     uncaughtExceptionMonitor: {
       level: "warning",
-      listener: (error, origin) =>
+      listener: (error, origin) => {
+        logWarning(`Uncaught Exception Monitor: ${origin}`);
         sendErrorMessage(
           error,
           "Uncaught Exception Monitor",
           `Origin: ${origin}`
-        ),
+        );
+      },
     },
     warning: {
       level: "warning",
       listener: (warning) => {
-        let warningMessage = warning.name
-          ? `**Name:** ${warning.name}\n**Message:** ${warning.message}\n**Stack:** ${warning.stack}`
-          : `**Warning:** ${warning}`;
-        sendErrorMessage(warning, "Warning", warningMessage);
+        logWarning(warning);
+        sendErrorMessage(warning, "Warning");
       },
     },
     exit: {
       level: "info",
       listener: (code, signal) => {
-        const exitMessage = `Exiting with code ${code} and signal ${signal}`;
-        const error = new Error(exitMessage);
-        sendErrorMessage(error, "Exit", exitMessage);
+        logInfo(`Exiting with code ${code} and signal ${signal}`);
+        const error = new Error(
+          `Exiting with code ${code} and signal ${signal}`
+        );
+        sendErrorMessage(
+          error,
+          "Exit",
+          `Exiting with code ${code} and signal ${signal}`
+        );
       },
     },
   };
@@ -111,8 +112,150 @@ module.exports = async function errorHandling(client, config) {
         await listenerConfig.listener(...args);
       } catch (error) {
         const { level } = listenerConfig;
-        console[level](`Error in process event listener: ${event}`, error);
+        log[level](
+          colors.bgRed(`Error in process event listener: ${event}`, error)
+        );
       }
     });
+  }
+
+  // Coloring Functions
+
+  const log = {
+    error: logError,
+    warning: logWarning,
+    info: logInfo,
+  };
+
+  function generateBorder(borderStyle, borderLength) {
+    const { top, horizontal, vertical, bottom } = borderStyle;
+    const borderLine = horizontal.repeat(borderLength);
+    const topBorder = top + borderLine + top;
+    const bottomBorder = bottom + borderLine + bottom;
+    return { topBorder, bottomBorder, vertical };
+  }
+
+  function logError(error, details = "") {
+    const timestamp = new Date().toLocaleString();
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : error.toString() || "No error message provided.";
+    const origin =
+      error instanceof Error ? `(${error.stack.split("\n")[1].trim()})` : "";
+    const borderLength = Math.max(
+      errorMessage.length + 20,
+      timestamp.length + origin.length + 20
+    );
+    const paddingLength = Math.max(
+      0,
+      borderLength - errorMessage.length - timestamp.length - 10
+    );
+
+    const borderStyle = {
+      top: "╔",
+      horizontal: "═",
+      vertical: "║",
+      bottom: "╚",
+    };
+
+    const { topBorder, bottomBorder, vertical } = generateBorder(
+      borderStyle,
+      borderLength
+    );
+    const paddedError =
+      " ".repeat(2) + colors.gray(errorMessage) + " ".repeat(paddingLength);
+    const paddedOrigin = colors.red(origin) + " ".repeat(paddingLength);
+    const timestampLine = " ".repeat(2) + timestamp + " ".repeat(2);
+
+    console.error(topBorder);
+    console.error(
+      vertical + colors.bgRed.bold(` ERROR `) + colors.red(` [${timestamp}] `)
+    );
+    console.error(vertical + colors.red.bold(paddedError) + vertical);
+    console.error(vertical + colors.red.bold(paddedOrigin) + vertical);
+    if (details) {
+      console.error(
+        vertical +
+          " ".repeat(2) +
+          colors.red.bold(details) +
+          " ".repeat(paddingLength) +
+          vertical
+      );
+    }
+    console.error(bottomBorder);
+  }
+
+  function logWarning(warning, details = "") {
+    const timestamp = new Date().toLocaleString();
+    const borderLength = warning.length + 30;
+    const paddingLength = Math.max(
+      0,
+      borderLength - warning.length - timestamp.length - 11
+    );
+
+    const borderStyle = {
+      top: "╔",
+      horizontal: "═",
+      vertical: "║",
+      bottom: "╚",
+    };
+
+    const { topBorder, bottomBorder, vertical } = generateBorder(
+      borderStyle,
+      borderLength
+    );
+    const paddedWarning = " ".repeat(2) + warning + " ".repeat(paddingLength);
+    const timestampLine = " ".repeat(2) + timestamp + " ".repeat(2);
+
+    console.warn(topBorder);
+    console.warn(
+      vertical +
+        colors.bgYellow.black.bold(` WARNING `) +
+        colors.yellow(` [${timestamp}] `)
+    );
+    console.warn(vertical + colors.yellow.bold(paddedWarning) + vertical);
+    if (details) {
+      console.warn(
+        vertical +
+          " ".repeat(2) +
+          colors.yellow.bold(details) +
+          " ".repeat(paddingLength) +
+          vertical
+      );
+    }
+    console.warn(vertical + colors.yellow.bold(timestampLine) + vertical);
+    console.warn(bottomBorder);
+  }
+
+  function logInfo(info) {
+    const timestamp = new Date().toLocaleString();
+    const borderLength = info.length + 22;
+    const paddingLength = Math.max(
+      0,
+      borderLength - info.length - timestamp.length - 11
+    );
+
+    const borderStyle = {
+      top: "╔",
+      horizontal: "═",
+      vertical: "║",
+      bottom: "╚",
+    };
+
+    const { topBorder, bottomBorder, vertical } = generateBorder(
+      borderStyle,
+      borderLength
+    );
+    const paddedInfo = " ".repeat(2) + info + " ".repeat(paddingLength);
+    const timestampLine = " ".repeat(2) + timestamp + " ".repeat(2);
+
+    console.log(topBorder);
+    console.log(
+      vertical + colors.bgCyan.bold(` INFO `) + colors.cyan(` [${timestamp}] `)
+    );
+    console.log(vertical + colors.cyan.bold(paddedInfo) + vertical);
+    console.log(vertical + colors.cyan.bold(timestampLine) + vertical);
+    console.log(bottomBorder);
   }
 };
