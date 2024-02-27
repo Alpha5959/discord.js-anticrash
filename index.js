@@ -1,4 +1,4 @@
-const { WebhookClient, EmbedBuilder } = require("discord.js");
+const { WebhookClient, EmbedBuilder, AttachmentBuilder } = require("discord.js");
 const colors = require("colors");
 
 module.exports = async function errorHandling(client, config) {
@@ -24,6 +24,7 @@ module.exports = async function errorHandling(client, config) {
   const sendErrorMessage = async (error, eventType, additionalInfo = "") => {
     try {
       let errorMessage = error instanceof Error ? error.stack : String(error);
+
       await webhook.send({
         username: embedConfig.webhookUsername,
         avatarURL: embedConfig.embedAvatarUrl,
@@ -37,23 +38,33 @@ module.exports = async function errorHandling(client, config) {
             .addFields([
               {
                 name: "__Event Type__",
-                value: `\`${eventType || "No types provided."}\``,
+                value: `\`${eventType.slice(0, 1021) || "No types provided."}\``,
                 inline: true,
               },
               {
                 name: "__Message__",
-                value: `**\`${
-                  additionalInfo || "No Additional Info Provided"
-                }\`**`,
+                value: `**\`${additionalInfo.slice(0, 1017) || "No Additional Info Provided"
+                  }\`**`,
                 inline: true,
-              },
-              {
-                name: "__Detailed__",
-                value: `\`\`\`${errorMessage || "Nothing found here."}\`\`\``,
-              },
-            ]),
+              }
+            ])
+            .setDescription(`__Detailed__\n\`\`\`${errorMessage.slice(0, 4076) || "Nothing found here."}\`\`\``)
+          ,
         ],
       });
+
+      if (errorMessage.length > 4076) {
+        await webhook.send({
+          username: embedConfig.webhookUsername,
+          avatarURL: embedConfig.embedAvatarUrl,
+          files: [
+            new AttachmentBuilder()
+              .setName("error.txt")
+              .setFile(Buffer.from(errorMessage, "utf-8"))
+              .setSpoiler(false)
+          ]
+        });
+      }
     } catch (error) {
       console.error(colors.bgRed("Error sending error message:"), error);
     }
@@ -166,7 +177,6 @@ module.exports = async function errorHandling(client, config) {
     const paddedError =
       " ".repeat(2) + colors.gray(errorMessage) + " ".repeat(paddingLength);
     const paddedOrigin = colors.red(origin) + " ".repeat(paddingLength);
-    const timestampLine = " ".repeat(2) + timestamp + " ".repeat(2);
 
     console.error(topBorder);
     console.error(
@@ -177,10 +187,10 @@ module.exports = async function errorHandling(client, config) {
     if (details) {
       console.error(
         vertical +
-          " ".repeat(2) +
-          colors.red.bold(details) +
-          " ".repeat(paddingLength) +
-          vertical
+        " ".repeat(2) +
+        colors.red.bold(details) +
+        " ".repeat(paddingLength) +
+        vertical
       );
     }
     console.error(bottomBorder);
@@ -211,17 +221,17 @@ module.exports = async function errorHandling(client, config) {
     console.warn(topBorder);
     console.warn(
       vertical +
-        colors.bgYellow.black.bold(` WARNING `) +
-        colors.yellow(` [${timestamp}] `)
+      colors.bgYellow.black.bold(` WARNING `) +
+      colors.yellow(` [${timestamp}] `)
     );
     console.warn(vertical + colors.yellow.bold(paddedWarning) + vertical);
     if (details) {
       console.warn(
         vertical +
-          " ".repeat(2) +
-          colors.yellow.bold(details) +
-          " ".repeat(paddingLength) +
-          vertical
+        " ".repeat(2) +
+        colors.yellow.bold(details) +
+        " ".repeat(paddingLength) +
+        vertical
       );
     }
     console.warn(vertical + colors.yellow.bold(timestampLine) + vertical);
