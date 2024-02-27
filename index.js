@@ -37,21 +37,19 @@ module.exports = async function errorHandling(client, config) {
             .addFields([
               {
                 name: "__Event Type__",
-                value: `\`${eventType || "No types provided."}\``,
+                value: `\`${eventType.slice(0, 1023) || "No types provided."}\``,
                 inline: true,
               },
               {
                 name: "__Message__",
                 value: `**\`${
-                  additionalInfo || "No Additional Info Provided"
+                  additionalInfo.slice(0, 1023) || "No Additional Info Provided"
                 }\`**`,
                 inline: true,
-              },
-              {
-                name: "__Detailed__",
-                value: `\`\`\`${errorMessage || "Nothing found here."}\`\`\``,
-              },
-            ]),
+              }
+            ])
+            .setDescription(`"__Detailed__"\n\`\`\`${errorMessage.slice(0, 4095) || "Nothing found here."}\`\`\``)
+            ,
         ],
       });
     } catch (error) {
@@ -166,7 +164,6 @@ module.exports = async function errorHandling(client, config) {
     const paddedError =
       " ".repeat(2) + colors.gray(errorMessage) + " ".repeat(paddingLength);
     const paddedOrigin = colors.red(origin) + " ".repeat(paddingLength);
-    const timestampLine = " ".repeat(2) + timestamp + " ".repeat(2);
 
     console.error(topBorder);
     console.error(
