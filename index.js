@@ -53,7 +53,7 @@ module.exports = async function errorHandling(client, config) {
         ],
       });
 
-      if (errorMessage.length > 4095) {
+      if (errorMessage.length > 4074) {
         await webhook.send({
           username: embedConfig.webhookUsername,
           avatarURL: embedConfig.embedAvatarUrl,
