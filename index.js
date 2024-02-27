@@ -48,12 +48,12 @@ module.exports = async function errorHandling(client, config) {
                 inline: true,
               }
             ])
-            .setDescription(`"__Detailed__"\n\`\`\`${errorMessage.slice(0, 4074) || "Nothing found here."}\`\`\``)
+            .setDescription(`__Detailed__\n\`\`\`${errorMessage.slice(0, 4076) || "Nothing found here."}\`\`\``)
           ,
         ],
       });
 
-      if (errorMessage.length > 4074) {
+      if (errorMessage.length > 4076) {
         await webhook.send({
           username: embedConfig.webhookUsername,
           avatarURL: embedConfig.embedAvatarUrl,
