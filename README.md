@@ -1,120 +1,104 @@
 # `discord.js-anticrash`: ⚡ Powerful Error Handling for Discord.js
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/discord.js-anticrash">
-    <img src="https://img.shields.io/npm/v/discord.js-anticrash?color=%23ff69b4&label=npm%20version&style=flat-square" alt="npm version">
-  </a>
-  <a href="https://www.npmjs.com/package/discord.js-anticrash">
-    <img src="https://img.shields.io/npm/dt/discord.js-anticrash?color=%233cb371&label=downloads&style=flat-square" alt="npm downloads">
-  </a>
-  <a href="https://github.com/Alpha5959/discord.js-anticrash/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/Alpha5959/discord.js-anticrash?color=%23008080&style=flat-square" alt="GitHub license">
-  </a>
-  <a href="https://github.com/Alpha5959/discord.js-anticrash/issues">
-    <img src="https://img.shields.io/github/issues/Alpha5959/discord.js-anticrash?color=%23ff6347&style=flat-square" alt="GitHub issues">
-  </a>
-</p>
+[![NPM Version](https://img.shields.io/npm/v/discord.js-anticrash?style=for-the-badge)](https://www.npmjs.com/package/discord.js-anticrash)
+[![Repository Size](https://img.shields.io/github/repo-size/Alpha5959/discord.js-anticrash?style=for-the-badge)](https://github.com/Alpha5959/discord.js-anticrash)
+[![License](https://img.shields.io/npm/l/discord.js-anticrash?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Downloads](https://img.shields.io/npm/dt/discord.js-anticrash?style=for-the-badge)](https://www.npmjs.com/package/discord.js-anticrash)
+[![Support](https://img.shields.io/badge/Support-Discord-7289d9?style=for-the-badge&logo=discord)](https://discord.com/invite/Rw5gRVqSaK)
 
-**Presenting `discord.js-anticrash`**, a powerful npm package 📦 tailored to enhance error handling ⚠️ and logging capabilities 📝 in your Discord.js bots. Seamlessly integrate this package to fortify your bot's stability and streamline the troubleshooting process.
+**discord.js-anticrash** is a lightweight and efficient package designed to enhance the stability of your Discord bot built with Discord.js. It automatically handles errors and crashes to ensure your bot stays online and operational with minimal downtime.
 
-## Features 🚀
+## Table of Contents
 
-- **🔒 Secure**: Safeguard your bot from unexpected crashes with proactive error identification and handling.
-- **🔔 Notifications**: Receive instant notifications through Discord webhooks whenever errors occur.
-- **🛠 Customizable**: Tailor the package to fit your needs by customizing webhook URLs, embed colors, titles, and usernames.
-- **🖥 Console Logging**: Enjoy the best-in-class console error logging feature for easy debugging.
-- **🚨 Error Detection**: Detects all errors and notifies the developer for comprehensive error tracking.
-- **💪 Strong Error Handling**: Employs a robust inbuilt error handling mechanism for enhanced bot stability.
-- **🔄 Regular Updates**: Benefit from daily updates to ensure compatibility and incorporate the latest features and improvements.
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Reference](#api-reference)
+- [Error Handling](#error-handling)
+- [License](#license)
+- [Contributing](#contributing)
+- [Acknowledgments](#acknowledgments)
 
-## Installation 📦
+## Features
 
-Get started by installing `discord.js-anticrash` using npm:
+- **Automatic Error Recovery**: Automatically restarts your bot if it crashes due to uncaught exceptions or unhandled promise rejections.
+- **Customizable Logging**: Easily log errors and events to your preferred logging service or console for better monitoring.
+- **User-Friendly API**: Simple to integrate and use with your existing Discord.js bot setup.
+
+## Installation
+
+To install **discord.js-anticrash**, use the following command:
 
 ```bash
 npm install discord.js-anticrash
 ```
 
-## Usage 🤖
+## Usage
 
-To implement `discord.js-anticrash`, import the package and invoke the `errorHandling` function, providing your Discord.js client and configuration options:
-
-```javascript
-const { Client, GatewayIntentBits, Events } = require("discord.js");
-const errorHandling = require("discord.js-anticrash");
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
-const config = {
-  webhookUrl: "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN",
-  embedColor: "#ff0000", // Optional
-  embedTitle: "Error", // Optional
-  embedAvatarUrl: "https://cdn.discordapp.com/avatars/example", // Optional
-  webhookUsername: "Error", // Optional
-};
-
-errorHandling(client, config);
-
-client.login("BotToken"); // Your Discord Bot token goes here.
-```
-
-## Configuration ⚙️
-
-Customize the behavior of `discord.js-anticrash` with the `config` object:
-
-- **webhookUrl (required)**: The URL of the Discord webhook to send error messages.
-- **embedColor (optional)**: The color of the embed message (default: `#ff0000`).
-- **embedTitle (optional)**: The title of the embed message (default: `Error`).
-- **embedTitle (optional)**: The title of the embed message (default: `Error`).
-- **embedAvatarUrl (optional)**: The title of the embed message (default: `None`).
-- **webhookUsername (optional)**: The username for the webhook (default: `Error`).
-
-## Error Handling 🚨
-
-`discord.js-anticrash` delivers advanced error handling for Discord.js:
-
-- **unhandledRejection**: Handles unhandled rejections, sending detailed error messages to the Discord webhook.
-- **uncaughtException**: Manages uncaught exceptions, dispatching detailed error messages to the Discord webhook.
-- **uncaughtExceptionMonitor**: Monitors uncaught exceptions and sends detailed error messages to the Discord webhook.
-- **warning**: Deals with warnings, forwarding detailed warning messages to the Discord webhook.
-- **exit**: Manages bot exit events, sending detailed exit messages to the Discord webhook.
-
-## Example 🌐
-
-Witness `discord.js-anticrash` in action, handling errors and uncaught exceptions:
+Here's a simple example of how to integrate **discord.js-anticrash** into your bot:
 
 ```javascript
-const { Client, GatewayIntentBits, Events } = require("discord.js");
-const errorHandling = require("discord.js-anticrash");
+const { Client } = require('discord.js');
+const Anticrash = require('discord.js-anticrash');
 
-const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+const client = new Client();
+Anticrash(client); // Enable anti-crash features
+
+client.once('ready', () => {
+  console.log(`Logged in as ${client.user.tag}`);
 });
 
-const config = {
-  webhookUrl: "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN", // REQUIRED
-  embedColor: "#ff0000", // Optional
-  embedTitle: "Error", // Optional
-  webhookUsername: "Error", // Optional
-};
-
-errorHandling(client, config);
-
-client.on(Events.MessageCreate, (message) => {
-  if (message.content === "!crash") {
-    throw new Error("Simulated crash!"); // Example test.
-  }
-});
-
-client.login("BotToken"); // Your Discord Bot token goes here.
+client.login('YOUR_BOT_TOKEN');
 ```
 
-## License 📜
+### TypeScript & ES Modules Usage
 
-`discord.js-anticrash` is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). This license allows you to use, modify, and distribute the package under certain conditions.
-Please review the [LICENSE](https://github.com/Alpha5959/discord.js-anticrash/blob/main/LICENSE) file for the full text of the Apache License 2.0.
-By using or contributing to this project, you agree to abide by the terms specified in the license.
+For TypeScript or ES Modules (`.mjs`), you can import and use the package like this:
 
-## Conclusion 🎉
+```typescript
+import { Client } from 'discord.js';
+import Anticrash from 'discord.js-anticrash';
 
-**`discord.js-anticrash` is your go-to solution for Discord.js bot development**, ensuring security, reliability, and ease of maintenance. With advanced error handling, customizable configurations, and detailed error messages, **`discord.js-anticrash`** elevates your Discord.js error handling experience.
+const client = new Client();
+Anticrash(client); // Enable anti-crash features
+
+client.once('ready', () => {
+  console.log(`Logged in as ${client.user.tag}`);
+});
+
+client.login('YOUR_BOT_TOKEN');
+```
+
+## API Reference
+
+### `Anticrash(client: Client): void`
+
+- **Description**: Initializes the anti-crash features for your Discord.js client.
+- **Parameters**: 
+  - `client`: The instance of your Discord.js client.
+- **Returns**: Nothing.
+
+## Error Handling
+
+**discord.js-anticrash** provides robust error handling. When an error occurs, it logs the error message and stack trace for easier troubleshooting.
+
+Example of a logged error:
+
+```
+✖ ERROR: Unhandled Promise Rejection
+  └─ Stack Trace:
+Error: Some error message
+```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). See the LICENSE file for more details.
+
+## Contributing
+
+Contributions are welcome! If you'd like to help improve **discord.js-anticrash**, please open an issue or submit a pull request on GitHub. All contributions should follow coding best practices and include relevant test cases.
+
+## Acknowledgments
+
+- [Discord.js](https://discord.js.org/) - A powerful JavaScript library for interacting with the Discord API.
+- Special thanks to everyone who has contributed to this package!
