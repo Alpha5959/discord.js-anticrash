@@ -1,2 +1,8 @@
-node_modules
-.vscode
+node_modules/
+.vscode/
+dist/
+*.log
+.env
+*.tsbuildinfo
+.idea/
+*.swp

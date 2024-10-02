@@ -1,21 +1,25 @@
 {
   "name": "discord.js-anticrash",
-  "version": "x.x.x",
-  "description": "Advanced anticrash, customizable, and error-handling enhancements for Discord bots using discord.js.",
+  "version": "5.2.5",
+  "description": "Advanced anticrash, customizable, and error-handling enhancements for Discord bots.",
   "main": "index.js",
-  "types": "index.d.ts",
+  "module": "index.mjs",
+  "types": "src/index.d.ts",
   "scripts": {
-    "audit": "npm audit"
+    "audit": "npm audit",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Alpha5959/discord.js-anticrash.git"
   },
   "keywords": [
-    "anticrash",
-    "discord.js-anticrash",
-    "discord-anticrash",
-    "discord.js"
+  "discord",
+  "anticrash",
+  "discord.js",
+  "discord-bot",
+  "error-handling",
+  "nodejs"
   ],
   "author": "xkroenen",
   "license": "Apache-2.0",
@@ -23,11 +27,18 @@
     "url": "https://github.com/Alpha5959/discord.js-anticrash/issues"
   },
   "homepage": "https://github.com/Alpha5959/discord.js-anticrash#readme",
-  "dependencies": {
-    "colors": "^1.4.0",
-    "discord.js": "^14.14.1"
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "discord.js": "^14.16.3",
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": ">=18.6.0"
-  }
+  },
+  "files": [
+    "src/",
+    "index.js",
+    "index.mjs",
+    "index.d.ts"
+  ]
 }
